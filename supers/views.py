@@ -1,21 +1,19 @@
-from rest_framework import generics, status
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework import generics, mixins
 from .models import Super
 from .serializers import SuperSerializer
 
-# Create your views here.
-class SuperList(APIView):
-    def get(self, request):
-        supers = Super.objects.all()
-        serializer = SuperSerializer(supers, many=True)
-        return Response(serializer.data)
 
-    def post(self, request):
-        serializer = SuperSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status= status.HTTP_201_CREATED)
+class SuperList(generics.ListCreateAPIView):
+    serializer_class = SuperSerializer
+
+    def get_queryset(self):
+        queryset = Super.objects.all()
+        type = self.request.query_params.get('type')
+
+        if type:
+            queryset = queryset.filter(super_type__type = type)
+            
+        return queryset
 
 class SuperDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Super.objects.all()

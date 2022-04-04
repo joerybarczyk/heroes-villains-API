@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Super
+from .models import *
 from .serializers import *
 
 
@@ -36,3 +36,11 @@ class SuperList(APIView):
 class SuperDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Super.objects.all()
     serializer_class = SuperSerializer
+
+class UpdatePowers(APIView):
+    def patch(self, request, pk, power_name):
+        super = Super.objects.get(pk=pk)
+        new_power = Power.objects.get(name=power_name)
+        super.powers.add(new_power)
+        serializer = SuperSerializer(super)
+        return Response(serializer.data)

@@ -34,10 +34,12 @@ class SuperList(APIView):
 
 
 class SuperDetail(generics.RetrieveUpdateDestroyAPIView):
+    
     queryset = Super.objects.all()
     serializer_class = SuperSerializer
 
 class UpdatePowers(APIView):
+
     def patch(self, request, pk, power_name):
         super = Super.objects.get(pk=pk)
         new_power = Power.objects.get(name=power_name)

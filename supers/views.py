@@ -1,19 +1,37 @@
-from rest_framework import generics, mixins
+from rest_framework import generics, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from .models import Super
-from .serializers import SuperSerializer
+from .serializers import *
 
 
-class SuperList(generics.ListCreateAPIView):
-    serializer_class = SuperSerializer
+class SuperList(APIView):
 
-    def get_queryset(self):
+    def get(self, request):
         queryset = Super.objects.all()
         type = self.request.query_params.get('type')
 
         if type:
-            queryset = queryset.filter(super_type__type = type)
-            
-        return queryset
+            type_filtered_queryset = queryset.filter(super_type__type = type)
+            serializer = SuperSerializer(type_filtered_queryset, many=True)
+            return Response(serializer.data)
+
+        custom_response = {'heroes': [], 'villains': []}
+
+        heroes = queryset.filter(super_type__type = 'hero')
+        villains = queryset.filter(super_type__type = 'villain')
+
+        custom_response['heroes'] = SuperSerializer(heroes, many=True).data
+        custom_response['villains'] = SuperSerializer(villains, many=True).data
+        
+        return Response(custom_response)
+
+    def post(self, request):
+        serializer = SuperSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class SuperDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Super.objects.all()

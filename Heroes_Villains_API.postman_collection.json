@@ -232,6 +232,175 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Compare_Supers",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": [
+						{
+							"name": "Compare_Supers (Tie)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/supers/?hero=The Comedian&villain=Ozymandias",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"supers",
+										""
+									],
+									"query": [
+										{
+											"key": "hero",
+											"value": "The Comedian"
+										},
+										{
+											"key": "villain",
+											"value": "Ozymandias"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 05 Apr 2022 14:57:54 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.10.4"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "56"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "Cross-Origin-Opener-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "\"It's a tie! Both supers have the same number of powers\""
+						},
+						{
+							"name": "Compare_Supers (Not a tie)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/supers/?hero=The Comedian&villain=Joker Two",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"supers",
+										""
+									],
+									"query": [
+										{
+											"key": "hero",
+											"value": "The Comedian"
+										},
+										{
+											"key": "villain",
+											"value": "Joker Two"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 05 Apr 2022 14:58:42 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.10.4"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, POST, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "585"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "Cross-Origin-Opener-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"winner\": {\n        \"id\": 6,\n        \"name\": \"Joker Two\",\n        \"alter_ego\": \"Jack Napier\",\n        \"powers\": [\n            {\n                \"id\": 1,\n                \"name\": \"Hand-to-hand combat\"\n            },\n            {\n                \"id\": 2,\n                \"name\": \"Firearms\"\n            },\n            {\n                \"id\": 3,\n                \"name\": \"Detective work\"\n            },\n            {\n                \"id\": 4,\n                \"name\": \"Omnipotence\"\n            }\n        ],\n        \"catchphrase\": \"Why so seriousssssssssssss\",\n        \"super_type\": {\n            \"id\": 2,\n            \"type\": \"Villain\"\n        }\n    },\n    \"loser\": {\n        \"id\": 4,\n        \"name\": \"The Comedian\",\n        \"alter_ego\": \"Edward Morgan Blake\",\n        \"powers\": [\n            {\n                \"id\": 1,\n                \"name\": \"Hand-to-hand combat\"\n            },\n            {\n                \"id\": 2,\n                \"name\": \"Firearms\"\n            }\n        ],\n        \"catchphrase\": \"Once you realize what a joke everything is, being the Comedian is the only thing that makes sense.\",\n        \"super_type\": {\n            \"id\": 1,\n            \"type\": \"Hero\"\n        }\n    }\n}"
+						}
+					]
 				}
 			]
 		},

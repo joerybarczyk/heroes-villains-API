@@ -10,12 +10,12 @@ class SuperList(APIView):
     def get(self, request):
         queryset = Super.objects.all()
 
-        type = self.request.query_params.get('type')
+        super_type = self.request.query_params.get('type')
         hero_name = self.request.query_params.get('hero')
         villain_name = self.request.query_params.get('villain')
 
-        if type:
-            type_filtered_queryset = queryset.filter(super_type__type = type)
+        if super_type:
+            type_filtered_queryset = queryset.filter(super_type__type = super_type)
             serializer = SuperSerializer(type_filtered_queryset, many=True)
             return Response(serializer.data)
 
@@ -32,6 +32,7 @@ class SuperList(APIView):
 
 
     def compare_supers(self, super1_name, super2_name):
+        '''Compare supers by their number of powers and return response containing winner and loser info'''
         super1_powers_count = len(self.get_super_powers_list(super1_name))
         super2_powers_count = len(self.get_super_powers_list(super2_name))
 
@@ -39,18 +40,17 @@ class SuperList(APIView):
             return self.winner_loser_response(super1_name, super2_name)
         elif super1_powers_count < super2_powers_count:
             return self.winner_loser_response(super2_name, super1_name)
-        return "It's a tie! Both supers have the same number of powers"\
+        return "It's a tie! Both supers have the same number of powers"
 
     def get_super_powers_list(self, super_name):
         '''Get list of a super's powers'''
-        super = Super.objects.get(name = super_name)
-        super_details = SuperSerializer(super).data
+        super_obj = Super.objects.get(name = super_name)
+        super_details = SuperSerializer(super_obj).data
         powers = super_details['powers']
         return powers
 
     def grouped_supers_response(self):
         '''Group supers by heroes and villains'''
-
         supers = Super.objects.all()
         heroes = supers.filter(super_type__type = 'hero')
         villains = supers.filter(super_type__type = 'villain')
@@ -74,8 +74,6 @@ class SuperList(APIView):
 
         return winner_loser
 
-
-        
 
 class SuperDetail(generics.RetrieveUpdateDestroyAPIView):
 

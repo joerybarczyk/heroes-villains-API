@@ -9,19 +9,20 @@ class SuperList(APIView):
 
     def get(self, request):
         queryset = Super.objects.all()
+
         type = self.request.query_params.get('type')
-        hero = self.request.query_params.get('hero')
-        villain = self.request.query_params.get('villain')
+        hero_name = self.request.query_params.get('hero')
+        villain_name = self.request.query_params.get('villain')
 
         if type:
             type_filtered_queryset = queryset.filter(super_type__type = type)
             serializer = SuperSerializer(type_filtered_queryset, many=True)
             return Response(serializer.data)
 
-        if hero and villain:
-            return(self.compare_hero_and_villain())
+        if hero_name and villain_name:
+            return Response(self.compare_supers(hero_name, villain_name))
 
-        return Response(self.heroes_and_villains_response())
+        return Response(self.grouped_supers_response())
 
     def post(self, request):
         serializer = SuperSerializer(data=request.data)
@@ -29,21 +30,50 @@ class SuperList(APIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def heroes_and_villains_response(self):
+
+    def compare_supers(self, super1_name, super2_name):
+        super1_powers_count = len(self.get_super_powers_list(super1_name))
+        super2_powers_count = len(self.get_super_powers_list(super2_name))
+
+        if super1_powers_count > super2_powers_count:
+            return self.winner_loser_response(super1_name, super2_name)
+        elif super1_powers_count < super2_powers_count:
+            return self.winner_loser_response(super2_name, super1_name)
+        return "It's a tie! Both supers have the same number of powers"\
+
+    def get_super_powers_list(self, super_name):
+        '''Get list of a super's powers'''
+        super = Super.objects.get(name = super_name)
+        super_details = SuperSerializer(super).data
+        powers = super_details['powers']
+        return powers
+
+    def grouped_supers_response(self):
+        '''Group supers by heroes and villains'''
+
         supers = Super.objects.all()
         heroes = supers.filter(super_type__type = 'hero')
         villains = supers.filter(super_type__type = 'villain')
 
-        custom_response = {'heroes': [], 'villains': []}
+        grouped_response = {'heroes': [], 'villains': []}
 
-        custom_response['heroes'] = SuperSerializer(heroes, many=True).data
-        custom_response['villains'] = SuperSerializer(villains, many=True).data
+        grouped_response['heroes'] = SuperSerializer(heroes, many=True).data
+        grouped_response['villains'] = SuperSerializer(villains, many=True).data
 
-        return custom_response
+        return grouped_response
 
-    def compare_hero_and_villain(self, hero_value, villain_value):
-        hero = Super.objects.get(name=hero_value)
-        villain = Super.objects.get(name=villain_value)
+    def winner_loser_response(self, winner_name, loser_name):
+        '''Return super comparison response grouped by winner and loser'''
+        supers = Super.objects.all()
+        winner = supers.get(name = winner_name)
+        loser = supers.get(name = loser_name)
+
+        winner_loser = {'winner': None, 'loser': None}
+        winner_loser['winner'] = SuperSerializer(winner).data
+        winner_loser['loser'] = SuperSerializer(loser).data
+
+        return winner_loser
+
 
         
 
